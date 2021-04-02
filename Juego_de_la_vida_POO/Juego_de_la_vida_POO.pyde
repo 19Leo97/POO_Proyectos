@@ -5,6 +5,9 @@ canvasx=523
 canvasy=419
 lado=50
 
+Pausa=False
+lentitud=40
+
 #Definimos variables relacionadas a la ubicacion de la grilla en el canvas
 columna=canvasx/lado
 extrax=((1.0*canvasx/lado)-columna)*0.5*lado
@@ -31,20 +34,30 @@ for x in range(columna):
         estado_y.append(estado[x][y])
     estado_N.append(estado_y)
 
+
+
+
 def setup():
     global canvasx,canvasy
     size(canvasx,canvasy)
-    frameRate(2)
+    frameRate(60)
     
 
 def draw():
-    global canvasx,canvasy,lado,estado,estado_N
+    global canvasx,canvasy,lado,estado,estado_N,Pausa
     background(50)
     
-    #Actualizamos los nuevos estados
-    for x in range(columna):
-        for y in range(fila):
-            estado[x][y]=estado_N[x][y]
+    
+    #Definimos de otra forma los frames por segundo, deacuerdo a la variable "lentitud"
+    if (frameCount%lentitud==0): Accion=True
+    else: Accion=False
+    
+    if (not Pausa) and Accion:
+        #Actualizamos los nuevos estados
+        for x in range(columna):
+            for y in range(fila):
+                estado[x][y]=estado_N[x][y]
+    
     
     #Imprimimos cuadrado por cuadrado
     for x in range(columna):
@@ -61,22 +74,29 @@ def draw():
             stroke(220)
             square(posx,posy,lado)
             
-            #Hallamos la suma de los estados vecinos
-            vecinos= estado[(x+1)%columna][(y+1)%fila]\
-                        + estado[(x+1)%columna][(y)%fila]\
-                        + estado[(x+1)%columna][(y-1)%fila]\
-                        + estado[(x)%columna][(y+1)%fila]\
-                        + estado[(x)%columna][(y-1)%fila]\
-                        + estado[(x-1)%columna][(y+1)%fila]\
-                        + estado[(x-1)%columna][(y)%fila]\
-                        + estado[(x-1)%columna][(y-1)%fila] 
+            if (not Pausa) and Accion:
+                #Hallamos la suma de los estados vecinos
+                vecinos= estado[(x+1)%columna][(y+1)%fila]\
+                            + estado[(x+1)%columna][(y)%fila]\
+                            + estado[(x+1)%columna][(y-1)%fila]\
+                            + estado[(x)%columna][(y+1)%fila]\
+                            + estado[(x)%columna][(y-1)%fila]\
+                            + estado[(x-1)%columna][(y+1)%fila]\
+                            + estado[(x-1)%columna][(y)%fila]\
+                            + estado[(x-1)%columna][(y-1)%fila] 
+                
+                #Definimos las leyes para asignar un nuevo estado
+                #1° Ley: Si esta muerta y hay solo 3 vecinos vivos, revive:
+                if estado[x][y]==0 and vecinos==3:
+                    estado_N[x][y]=1
+                #2° Ley: Si esta viva y no hay 2 o 3 vecinos vivos, muere:
+                elif estado[x][y]==1 and (vecinos<2 or vecinos>3):
+                    estado_N[x][y]=0
+                #Si no, se deja el mismo estado
+                else: estado_N[x][y]=estado[x][y]
             
-            #Definimos las leyes para asignar un nuevo estado
-            #1° Ley: Si esta muerta y hay solo 3 vecinos vivos, revive:
-            if estado[x][y]==0 and vecinos==3:
-                estado_N[x][y]=1
-            #2° Ley: Si esta viva y no hay 2 o 3 vecinos vivos, muere:
-            elif estado[x][y]==1 and (vecinos<2 or vecinos>3):
-                estado_N[x][y]=0
-            #Si no, se deja el mismo estado
-            else: estado_N[x][y]==estado[x][y]
+
+def keyPressed():
+    global Pausa
+    if int(keyCode)==32:
+        Pausa=not Pausa
