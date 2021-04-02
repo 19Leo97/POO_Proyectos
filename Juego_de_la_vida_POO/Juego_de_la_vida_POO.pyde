@@ -1,12 +1,15 @@
 
 #Advertencia: todo número no declarado como lo contrario, se toma como entero
 #Multiplicaremos por 1.0 para cuando queremos que un numero sea float
-canvasx=523
-canvasy=419
-lado=50
 
-Pausa=False
-lentitud=2
+#Variables de las dimensiones del canvax y lado de cuadros, ajustables
+canvasx=700
+canvasy=500
+lado=40
+
+#Definimos variables de pausa y velocidad
+Pausa=True
+lentitud=20
 
 #Definimos variables relacionadas a la ubicacion de la grilla en el canvas
 columna=canvasx/lado
@@ -21,10 +24,13 @@ for x in range(columna):
     for y in range(fila):
         estado_y.append(0)
     estado.append(estado_y)
-        
-estado[0][0]=1
-estado[0][1]=1
-estado[0][2]=1
+
+#Estructura ejemplo de partida        
+estado[3][1]=1
+estado[3][2]=1
+estado[3][3]=1
+estado[2][3]=1
+estado[1][2]=1
 
 #Hacemos una copia de la matriz de estados
 estado_N=[]
@@ -40,7 +46,7 @@ for x in range(columna):
 def setup():
     global canvasx,canvasy
     size(canvasx,canvasy)
-    frameRate(100)
+    frameRate(60)
     
 
 def draw():
@@ -66,13 +72,13 @@ def draw():
                         
             #miramos su estado para rellenarlo
             if estado[x][y]==0: noFill()
-            else: fill(220)
+            else: fill(250)
             
             #Dibujamos el cuadrado
             posx=(x*lado)+extrax
             posy=(y*lado)+extray
             strokeWeight(1)
-            stroke(220)
+            stroke(250)
             square(posx,posy,lado)
             
             if (not Pausa) and Accion:
