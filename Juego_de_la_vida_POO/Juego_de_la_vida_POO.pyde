@@ -6,7 +6,7 @@ canvasy=419
 lado=50
 
 Pausa=False
-lentitud=40
+lentitud=2
 
 #Definimos variables relacionadas a la ubicacion de la grilla en el canvas
 columna=canvasx/lado
@@ -40,15 +40,16 @@ for x in range(columna):
 def setup():
     global canvasx,canvasy
     size(canvasx,canvasy)
-    frameRate(60)
+    frameRate(100)
     
 
 def draw():
-    global canvasx,canvasy,lado,estado,estado_N,Pausa
+    global canvasx,canvasy,lado,estado,estado_N,Pausa,lentitud
     background(50)
     
     
     #Definimos de otra forma los frames por segundo, deacuerdo a la variable "lentitud"
+    if lentitud<1: lentitud=1
     if (frameCount%lentitud==0): Accion=True
     else: Accion=False
     
@@ -95,8 +96,19 @@ def draw():
                 #Si no, se deja el mismo estado
                 else: estado_N[x][y]=estado[x][y]
             
-
+#Teclas para pausar y velocidad
 def keyPressed():
-    global Pausa
+    global Pausa,lentitud
     if int(keyCode)==32:
         Pausa=not Pausa
+    if key==CODED:
+        if keyCode==LEFT:
+            lentitud+=1
+        if keyCode==RIGHT:
+            lentitud-=1
+
+#Click para cambiar estado
+def mousePressed():
+    if mouseX>extrax and mouseX<(canvasx-extrax) and mouseY>extray and mouseY<(canvasy-extray):
+        estado[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]=not estado[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]
+        estado_N[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]=not estado_N[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]
