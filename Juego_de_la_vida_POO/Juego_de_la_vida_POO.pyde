@@ -3,13 +3,13 @@
 #Multiplicaremos por 1.0 para cuando queremos que un numero sea float
 
 #Variables de las dimensiones del canvax y lado de cuadros, ajustables
-canvasx=700
-canvasy=500
-lado=40
+canvasx=1360
+canvasy=700
+lado=5
 
 #Definimos variables de pausa y velocidad
 Pausa=True
-lentitud=20
+lentitud=10
 
 #Definimos variables relacionadas a la ubicacion de la grilla en el canvas
 columna=canvasx/lado
@@ -26,11 +26,11 @@ for x in range(columna):
     estado.append(estado_y)
 
 #Estructura ejemplo de partida        
-estado[3][1]=1
-estado[3][2]=1
-estado[3][3]=1
-estado[2][3]=1
-estado[1][2]=1
+#estado[3][1]=1
+#estado[3][2]=1
+#estado[3][3]=1
+#estado[2][3]=1
+#estado[1][2]=1
 
 #Hacemos una copia de la matriz de estados
 estado_N=[]
@@ -60,6 +60,7 @@ def draw():
     else: Accion=False
     
     if (not Pausa) and Accion:
+        print(frameCount)
         #Actualizamos los nuevos estados
         for x in range(columna):
             for y in range(fila):
@@ -77,7 +78,7 @@ def draw():
             #Dibujamos el cuadrado
             posx=(x*lado)+extrax
             posy=(y*lado)+extray
-            strokeWeight(1)
+            strokeWeight(0.4)
             stroke(250)
             square(posx,posy,lado)
             
@@ -102,8 +103,9 @@ def draw():
                 #Si no, se deja el mismo estado
                 else: estado_N[x][y]=estado[x][y]
             
-#Teclas para pausar y velocidad
+
 def keyPressed():
+    #Teclas para pausar y velocidad
     global Pausa,lentitud
     if int(keyCode)==32:
         Pausa=not Pausa
@@ -112,9 +114,22 @@ def keyPressed():
             lentitud+=1
         if keyCode==RIGHT:
             lentitud-=1
+    
+    #Teclas para patrones establecidos y aleatorios
+    if key=='0': 
+        for x in range(columna):
+            for y in range(fila):
+                estado[x][y]=estado_N[x][y]=0
+    
+    if key=='1': 
+        for x in range(columna):
+            for y in range(fila):
+                estado[x][y]=estado_N[x][y]=int(random(2))%2
 
 #Click para cambiar estado
 def mousePressed():
     if mouseX>extrax and mouseX<(canvasx-extrax) and mouseY>extray and mouseY<(canvasy-extray):
         estado[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]=not estado[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]
         estado_N[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]=not estado_N[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]
+
+    
