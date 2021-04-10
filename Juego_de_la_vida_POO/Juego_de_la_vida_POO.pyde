@@ -5,11 +5,11 @@
 #Variables de las dimensiones del canvax y lado de cuadros, ajustables
 canvasx=1360
 canvasy=700
-lado=5
+lado=10
 
 #Definimos variables de pausa y velocidad
 Pausa=True
-lentitud=10
+lentitud=1
 
 #Definimos variables relacionadas a la ubicacion de la grilla en el canvas
 columna=canvasx/lado
@@ -60,7 +60,6 @@ def draw():
     else: Accion=False
     
     if (not Pausa) and Accion:
-        print(frameCount)
         #Actualizamos los nuevos estados
         for x in range(columna):
             for y in range(fila):
@@ -125,6 +124,22 @@ def keyPressed():
         for x in range(columna):
             for y in range(fila):
                 estado[x][y]=estado_N[x][y]=int(random(2))%2
+                
+    if key=='2':
+        matrix1=[[0,0,0,0,0],
+                 [0,0,0,1,0],
+                 [0,1,0,1,0],
+                 [0,0,1,1,0],
+                 [0,0,0,0,0]]
+        copia(matrix1)
+    
+    if key=='3':
+            matrix1=[[0,0,0,0,0],
+                    [0,0,0,1,0],
+                    [0,1,0,1,0],
+                    [0,0,1,1,0],
+                    [0,0,0,0,0]]
+            centrar(matrix1)
 
 #Click para cambiar estado
 def mousePressed():
@@ -132,4 +147,25 @@ def mousePressed():
         estado[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]=not estado[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]
         estado_N[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]=not estado_N[int(mouseX-extrax)/lado][int(mouseY-extray)/lado]
 
-    
+def copia(matrix):
+    matrix_X=len(matrix[0])*3
+    matrix_Y=len(matrix)*3
+    for x in range(columna/(matrix_X)):
+        for y in range(fila/(matrix_Y)):
+            for x1 in range(matrix_X/3):
+                for y1 in range(matrix_Y/3):
+                    estado[x1+matrix_X*x][y1+matrix_Y*y]=matrix[x1][y1]
+                    estado_N[x1+matrix_X*x][y1+matrix_Y*y]=matrix[x1][y1]
+
+def centrar(matrix):
+    matrix_X=len(matrix[0])
+    matrix_Y=len(matrix)
+    if columna<matrix_X or fila<matrix_Y:
+        print("EROR:La matriz ejemplo es mas grande que la matriz lienzo")
+        return
+    deltaX=(columna-matrix_X)/2
+    deltaY=(fila-matrix_Y)/2
+    for x1 in range(matrix_X):
+        for y1 in range(matrix_Y):
+            estado[x1+deltaX][y1+deltaY]=matrix[x1][y1]
+            estado_N[x1+deltaX][y1+deltaY]=matrix[x1][y1]
