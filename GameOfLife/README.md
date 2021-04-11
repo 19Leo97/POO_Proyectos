@@ -1,3 +1,5 @@
+EL programa debe abrirse con Processing modo Python. En la carpeta se encuentran además archivos textos donde estan contenidos patrones ejemplo.
+
 CONTROLES: 
     Click: Matar, revivir
     Espacio: Pausa, Play
